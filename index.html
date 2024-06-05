@@ -3,11 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
-    <link rel="stylesheet" href="style.css">
-</head> 
+    <title>Related Apps</title>
+</head>
 <body>
-    <h1>Hello World</h1>
+    <h1>Installed Related Apps</h1>
+    <div id="related-apps">
+        <p>Fetching related apps...</p>
+    </div>
+
+    <script>
+        async function fetchInstalledRelatedApps() {
+            try {
+                if ('getInstalledRelatedApps' in navigator) {
+                    const relatedApps = await navigator.getInstalledRelatedApps();
+                    const appsDiv = document.getElementById('related-apps');
+                    appsDiv.innerHTML = '';
+
+                    if (relatedApps.length > 0) {
+                        relatedApps.forEach(app => {
+                            const appInfo = document.createElement('p');
+                            appInfo.textContent = `Name: ${app.name}, Platform: ${app.platform}, URL: ${app.url}`;
+                            appsDiv.appendChild(appInfo);
+                        });
+                    } else {
+                        appsDiv.textContent = 'No related apps installed.';
+                    }
+                } else {
+                    document.getElementById('related-apps').textContent = 'getInstalledRelatedApps API is not supported by your browser.';
+                }
+            } catch (error) {
+                document.getElementById('related-apps').textContent = `Error fetching related apps: ${error.message}`;
+            }
+        }
+
+        fetchInstalledRelatedApps();
+    </script>
 </body>
 </html>
